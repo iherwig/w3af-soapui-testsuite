@@ -8,7 +8,7 @@
 </con:parameters><con:parameterOrder><con:entry>id</con:entry><con:entry>detail_id</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface><con:testSuite id="4ef8fc1c-80e6-4d60-a31a-53e2679f5da1" name="Run Tests"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="325e51f0-2051-48f4-a613-45b1e44999d5" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase 1" searchProperties="true"><con:settings/><con:testStep type="groovy" name="setup" id="6204acbd-a5c5-48f3-afad-7f79e0125a07"><con:settings/><con:config><script>import groovy.json.*
 
 def createParams = [
-	target_urls: testRunner.testCase.testSuite.project.getPropertyValue('target_urls').tokenize(','),
+	target_urls: testRunner.testCase.testSuite.project.getPropertyValue('target_urls').split(',').collect { it.trim() },
 	scan_profile: testRunner.testCase.testSuite.getPropertyValue('profile')
 ]
 def formattedCreateParam = JsonOutput.toJson(createParams).replaceAll("\\\\n", "\\n")
