@@ -18,14 +18,13 @@
 ## Running
 
 * Start SoapUI and import the project file `w3af-pen-tests-soapui-project.xml`.
-* Doubleclick the project node (*w3af pen tests*) to open the project settings dialog and enter the following configuration values in the *properties* tab:
+* Doubleclick the project node (*w3af pen tests*) to open the *project view* dialog and enter the following configuration values in the *properties* tab:
   
   * `target_urls` A comma separated list of urls to test (e.g. `http://localhost/site1, http://localhost/site2`)
   * `profile_file` The file name of the w3af profile to be used (default: `test_profile.pw3af`). The value will be interpreted relative to the project directory.
 
-* Doubleclick the first test case node (*w3af pen tests* > *Run Tests* > *TestCase 1*).
-* Run the tests by clicking the green arrow.
+* Doubleclick the test suite node (*w3af pen tests* > *Run Tests*) to open the *test suite editor* and run the tests by clicking the green arrow.
 
 ## Results
 
-After the tests are finished, a new result file will be written in the `results` directory (e.g. `results/result_20180109_201312.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file. 
+After the tests are finished, a new result file will be created in the `results` directory (e.g. `results/result_20180109_201312.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file. 
