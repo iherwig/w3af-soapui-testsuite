@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="description" content="w3af pentest results">
+    <title>w3af pentest results</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.90/jsrender.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <form action="#">
+        <div class="file-field input-field">
+          <div class="btn grey darken-1">
+            <span>Result File</span>
+            <input id="file-input" name="resultFile" type="file">
+          </div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text">
+          </div>
+        </div>
+      </form>
+      <div class="card-panel" style="display:none">
+        <span id="file-info" class="grey-text text-darken-2"></span>
+      </div>
+      <ul id="result" class="collapsible" data-collapsible="expandable" style="display:none"></ul>      
+    </div>
+    <script id="data-item" type="text/x-jsrender">
+      <li>
+        <div class="collapsible-header {{severity:severity}}">{{:id}} - {{:name}} - {{:severity}}</div>
+        <div class="collapsible-body">
+          <h5>Summary</h5>
+          {{if highlight != ""}}
+          <p class="z-depth-2 {{severitytext:severity}}" style="padding:5px;">{{:highlight}}</p>
+          {{/if}}
+          {{if attributes}}
+          <ul class="collection">
+            {{props attributes}}
+            <li class="collection-item">{{>key}}: {{>prop}}</li>
+            {{/props }}
+          </ul>
+          {{/if}}
+          <p>{{nl:desc}}</p>
+          {{if long_description}}
+          <h5>Details</h5>
+          <p>{{nl:long_description}}</p>
+          {{/if}}
+          {{if fix_guidance}}
+          <h5>Fix</h5>
+          <blockquote>{{nl:fix_guidance}}</blockquote>
+          {{/if}}
+          {{if references}}
+          <h5>References</h5>
+          <ul class="collection">
+            {{for references}}
+            <li class="collection-item">{{:title}} - <a href="{{:url}}" target="_blank">{{:url}}</a></li>
+            {{/for}}
+          </ul>
+          {{/if}}
+        </div>
+      </li>
+    </script>
+    <script>
+      $(function() {
+        var severtityValue = {
+          'Information': 0,
+          'Low': 1,
+          'Medium': 2,
+          'High': 3
+        }
+        var severtityColors = {
+          'Information': 'grey lighten-4',
+          'Low': 'yellow accent-4',
+          'Medium': 'orange accent-4',
+          'High': 'red accent-4'
+        }
+      
+        // register jsrender converters
+        $.views.converters("nl", function(val) {
+          return val.replace(/\n/g, '<br>');
+        });
+        $.views.converters("severity", function(val) {
+          return severtityColors[val];
+        });
+        $.views.converters("severitytext", function(val) {
+          var parts = severtityColors[val].split(' ');
+          return parts[0] + "-text text-darken-2";
+        });
+        
+        // analyze result
+        $('#file-input').on('change', function(e) {
+          var file = e.target.files[0];
+          var info = 'Report: ' + escape(file.name) + ' / Date: ' + file.lastModifiedDate.toLocaleDateString();
+          $('#file-info').text(info).parent().show();
+          
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var html = '';
+            var items = JSON.parse(e.target.result).items;
+            items.sort(function(a, b) {
+              var sevA = severtityValue[a.detail.severity];
+              var sevB = severtityValue[b.detail.severity];
+              return sevB-sevA;
+            });
+            for (var i=0; i <items.length; i++) {
+              var item = items[i];
+              var tmpl = $.templates("#data-item");
+              html += tmpl.render(item.detail);
+            }
+            $("#result").html(html).show();
+          };
+          reader.readAsText(file);
+        });
+      })
+    </script>    
+  </body>
+</html>
