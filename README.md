@@ -7,7 +7,7 @@
 
       docker run -d -p 5000:5000 -p 9001:9001 andresriancho/w3af-api
   
-* Verify the container setup by opening <http://localhost:5000> in a browser and checking the response:
+* Verify the container setup by opening the url <http://localhost:5000> in a browser and checking the response:
 
       {
         "docs": "http://docs.w3af.org/en/latest/api/index.html"
@@ -24,6 +24,9 @@
   * `profile_file` The file name of the w3af profile to be used (default: `test_profile.pw3af`). The value will be interpreted relative to the project directory.
 
 * Doubleclick the test suite node (*w3af pen tests* > *Run Tests*) to open the *test suite editor* and run the tests by clicking the green arrow.
+* To obtain **information on the running tests** you can:
+  * Doubleclick the *get status* test step to open it's editor. The JSON response tab is updated after each request.
+  * Open the url <http://localhost:9001> in a browser to open the *Supervisor* dashboard. From there you can view the log files of the w3af process. 
 
 ## Results
 
