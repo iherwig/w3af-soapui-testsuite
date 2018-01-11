@@ -46,5 +46,5 @@ After the tests are finished, a new result file will be created in the `results`
          "please": "https://github.com/andresriancho/w3af/issues/new"
       }
 
-  w3af needs some time to initialize. If the status is requested during initialization, an error is returned (see jlord/sheetsee.js#26). Since the initialization time depends on the execution enviroment, you might want to **increase the delay of the status call** in the *wait* test step.
+  w3af needs some time to initialize. If the status is requested during initialization, an error is returned (see <https://github.com/andresriancho/w3af/issues/16047>). Since the initialization time depends on the execution enviroment, you might want to **increase the delay of the status call** in the *wait* test step.
 
