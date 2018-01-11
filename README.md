@@ -25,9 +25,26 @@
 
 * Doubleclick the test suite node (*w3af pen tests* > *Run Tests*) to open the *test suite editor* and run the tests by clicking the green arrow.
 * To obtain **information on the running tests** you can:
-  * Doubleclick the *get status* test step to open it's editor. The JSON response tab is updated after each request.
+  * Doubleclick the *get status* test step (*w3af pen tests* > *Run Tests* > *Test Case 1* > *Test Steps* > *get status*)  to open it's editor. The JSON response tab is updated after each request.
   * Open the url <http://localhost:9001> in a browser to open the *Supervisor* dashboard. From there you can view the log files of the w3af process. 
 
 ## Results
 
-After the tests are finished, a new result file will be created in the `results` directory (`results/project_name_YYYYMMdd_HHmmss.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file. 
+After the tests are finished, a new result file will be created in the `results` directory (`results/project_name_YYYYMMdd_HHmmss.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file.
+
+## Troubleshooting
+
+* Status code 500 in *get status* response:
+
+      {
+         "code": 500,
+         "exception_type": "RuntimeError",
+         "filename": "status.py",
+         "function_name": "get_rpm",
+         "line_number": 169,
+         "message": "Can NOT call get_run_time before start().",
+         "please": "https://github.com/andresriancho/w3af/issues/new"
+      }
+
+  w3af needs some time to initialize. If the status is requested during initialization, an error is returned (see jlord/sheetsee.js#26). Since the initialization time depends on the execution enviroment, you might want to **increase the delay of the status call** in the *wait* test step.
+
