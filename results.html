@@ -29,7 +29,19 @@
       <div class="card-panel" style="display:none">
         <span id="file-info" class="grey-text text-darken-2"></span>
       </div>
-      <ul id="result" class="collapsible" data-collapsible="expandable" style="display:none"></ul>      
+      <ul id="result" class="collapsible" data-collapsible="expandable" style="display:none"></ul>
+
+      <ul id="log" class="collapsible" data-collapsible="accordion" style="display:none">
+        <li>
+          <div class="collapsible-header">Log</div>
+          <div class="collapsible-body">
+            <table class="bordered responsive-table">
+              <tbody id="log-table">
+              </tbody>
+            </table>
+          </div>
+        </li>
+      </ul>
     </div>
     <script id="data-item" type="text/x-jsrender">
       <li>
@@ -66,6 +78,13 @@
         </div>
       </li>
     </script>
+    <script id="log-entry" type="text/x-jsrender">
+      <tr class="{{if type == 'error'}}red-text{{/if}}">
+        <td style="vertical-align:top">{{nbsp:time}}</td>
+        <td style="vertical-align:top"><strong>{{:type}}</strong></td>
+        <td style="vertical-align:top">{{nl:message}}</td>
+      </tr>
+    </script>
     <script>
       $(function() {
         var severtityValue = {
@@ -80,10 +99,13 @@
           'Medium': 'orange accent-4',
           'High': 'red accent-4'
         }
-      
+
         // register jsrender converters
         $.views.converters("nl", function(val) {
           return val.replace(/\n/g, '<br>');
+        });
+        $.views.converters("nbsp", function(val) {
+          return val.replace(/ /g, '&nbsp;');
         });
         $.views.converters("severity", function(val) {
           return severtityColors[val];
@@ -101,23 +123,35 @@
           
           var reader = new FileReader();
           reader.onload = function(e) {
-            var html = '';
-            var items = JSON.parse(e.target.result).items;
-            items.sort(function(a, b) {
+            // result items
+            var results = '';
+            var resultItems = JSON.parse(e.target.result).items;
+            resultItems.sort(function(a, b) {
               var sevA = severtityValue[a.detail.severity];
               var sevB = severtityValue[b.detail.severity];
               return sevB-sevA;
             });
-            for (var i=0; i <items.length; i++) {
-              var item = items[i];
+            for (var i=0; i <resultItems.length; i++) {
+              var item = resultItems[i];
               var tmpl = $.templates("#data-item");
-              html += tmpl.render(item.detail);
+              results += tmpl.render(item.detail);
             }
-            $("#result").html(html).show();
+            $("#result").html(resultItems.length == 0 ? '<div class="card-panel">No results</div>' : results).show();
+
+            // log entries
+            var log = '';
+            var logEntries = JSON.parse(e.target.result).log.entries;
+            for (var i=0; i <logEntries.length; i++) {
+              var entry = logEntries[i];
+              var tmpl = $.templates("#log-entry");
+              log += tmpl.render(entry);
+            }
+            $("#log-table").html(log);
+            $("#log").show();
           };
           reader.readAsText(file);
         });
       })
-    </script>    
+    </script>
   </body>
 </html>

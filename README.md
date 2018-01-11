@@ -30,4 +30,4 @@
 
 ## Results
 
-After the tests are finished, a new result file will be created in the `results` directory (e.g. `results/result_20180109_201312.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file. 
+After the tests are finished, a new result file will be created in the `results` directory (`results/project_name_YYYYMMdd_HHmmss.json`). To review the JSON formatted results in a readable way, open `results.html` in a browser and select the desired result file. 
